@@ -2,37 +2,37 @@ const fs = require("fs");
 
 const input = fs.readFileSync("./input/input06.txt", "utf8").split("");
 
-const findSequence = (input, pos) => {
-  let temp = "";
-  let found = "";
+const findSequence = (input, pos = []) => {
+  const temp = pos.map((p) => ({
+    text: "",
+    pos: p,
+    result: "",
+  }));
+
   for (let index = 0; index < input.length; index++) {
     const char = input[index];
-    temp += char;
+    temp.forEach((t) => {
+      t.text += char;
 
-    if (temp.length > pos) {
-      temp = temp.substring(1, pos + 1);
-    }
-
-    if (temp.length === pos && found === "") {
-      const set = [...new Set(temp.split(""))];
-
-      if (set.length === pos) {
-        found = index + 1;
+      if (t.text.length > t.pos) {
+        t.text = t.text.substring(1, t.pos + 1);
       }
-    }
+
+      if (t.text.length === t.pos && t.result === "") {
+        const set = [...new Set(t.text.split(""))];
+
+        if (set.length === t.pos) {
+          t.result = index + 1;
+        }
+      }
+    });
   }
 
-  return found;
+  return temp;
 };
 
 /*
- ************ Part 1 ************
+ ************ Part 1 & 2 ************
  */
 
-console.log("part 1:", findSequence(input, 4));
-
-/*
- ************ Part 2 ************
- */
-
-console.log("part 2:", findSequence(input, 14));
+console.log("part 1:", findSequence(input, [4, 14]));
